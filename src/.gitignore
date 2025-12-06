@@ -1,0 +1,80 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+dependency-reduced-pom.xml
+buildNumber.properties
+release.properties
+
+# Gradle (if used)
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+out/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Liquibase
+liquibase.*
+*.lock
+
+# Test results
+test-output/
+surefire-reports/
+*.ec
+
+# Coverage
+jacoco.exec
+coverage-reports/
+coverage/
+
+# Database files (e.g., H2 or SQLite test DBs)
+*.mv.db
+*.h2.db
+*.db
+
+# Environment
+.env
+*.env
+
+# Temporary files
+*.tmp
+*.swp
+*~
+
+# Spring Boot devtools
+.spring-boot-devtools.properties
+
+# Local cache
+.cache/

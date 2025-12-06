@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group 'com.spglobal'
+version '1.0-SNAPSHOT'
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Guava для ImmutableMap, ImmutableList
+    implementation 'com.google.guava:guava:32.0.1-jre'
+
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // Mockito
+    testImplementation 'org.mockito:mockito-core:5.10.0'
+}
+
+test {
+    useJUnitPlatform()
+}
