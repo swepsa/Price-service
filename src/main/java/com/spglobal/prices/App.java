@@ -23,19 +23,19 @@ public class App {
         PriceConsumerService consumerService = new PriceConsumerServiceImpl(storage);
 
         String batchId = producerService.startBatch();
-        producerService.uploadChunk(batchId, foo1());
-        producerService.uploadChunk(batchId, foo2());
+        producerService.uploadChunk(batchId, getCollection1());
+        producerService.uploadChunk(batchId, getCollection2());
         producerService.completeBatch(batchId);
         Thread.sleep(100L);
         System.out.println(consumerService.getLatest(ImmutableSet.of("Sp1")));
 
     }
 
-    private static List<PriceData> foo1() {
+    private static List<PriceData> getCollection1() {
         return List.of(new PriceData("Sp1", Instant.now().minusSeconds(10), ImmutableMap.of("ask", 123)));
     }
 
-    private static List<PriceData> foo2() {
+    private static List<PriceData> getCollection2() {
         return List.of(new PriceData("Sp1", Instant.now(), ImmutableMap.of("ask", 124)));
     }
 }

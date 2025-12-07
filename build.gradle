@@ -24,6 +24,10 @@ dependencies {
 
     // Mockito
     testImplementation 'org.mockito:mockito-core:5.10.0'
+
+    // Awaitility
+    testImplementation "org.awaitility:awaitility:4.2.0"
+
 }
 
 test {

@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,11 +32,13 @@ class PrimaryPriceStorageImplTest {
     }
 
     @Test
-    void testUpdateRecords_SingleRecord() throws InterruptedException {
+    void testUpdateRecords_SingleRecord() {
         PriceData price = new PriceData("A", Instant.now(), ImmutableMap.of("price", 100));
         storage.updateRecords(List.of(price));
 
-        Thread.sleep(100);
+        await().atMost(2, SECONDS).until(() ->
+                !storage.getLatest(Set.of("A")).isEmpty()
+        );
 
         ImmutableMap<String, ImmutableMap<String, Object>> result = storage.getLatest(Set.of("A"));
         assertEquals(1, result.size());
@@ -44,7 +48,7 @@ class PrimaryPriceStorageImplTest {
     }
 
     @Test
-    void testUpdateRecords_keepsLatestByAsOf() throws InterruptedException {
+    void testUpdateRecords_keepsLatestByAsOf() {
         Instant now = Instant.now();
         PriceData oldPrice = new PriceData("A", now.minusSeconds(10), ImmutableMap.of("price", 50));
         PriceData newPrice = new PriceData("A", now, ImmutableMap.of("price", 100));
@@ -52,7 +56,9 @@ class PrimaryPriceStorageImplTest {
         storage.updateRecords(List.of(oldPrice));
         storage.updateRecords(List.of(newPrice));
 
-        Thread.sleep(200);
+        await().atMost(2, SECONDS).until(() ->
+                !storage.getLatest(Set.of("A")).isEmpty()
+        );
 
         ImmutableMap<String, ImmutableMap<String, Object>> result = storage.getLatest(Set.of("A"));
         assertEquals(1, result.size());
@@ -62,15 +68,18 @@ class PrimaryPriceStorageImplTest {
     }
 
     @Test
-    void testUpdateRecords_incorrectProducerOrdering() throws InterruptedException {
+    void testUpdateRecords_incorrectProducerOrdering() {
         Instant now = Instant.now();
         PriceData oldPrice = new PriceData("A", now.minusSeconds(10), ImmutableMap.of("price", 50));
         PriceData newPrice = new PriceData("A", now, ImmutableMap.of("price", 100));
+        PriceData price = new PriceData("B", now, ImmutableMap.of("price", 1));
 
         storage.updateRecords(List.of(newPrice));
-        storage.updateRecords(List.of(oldPrice));
+        storage.updateRecords(List.of(price, oldPrice));
 
-        Thread.sleep(200);
+        await().atMost(2, SECONDS).until(() ->
+                !storage.getLatest(Set.of("B")).isEmpty()
+        );
 
         ImmutableMap<String, ImmutableMap<String, Object>> result = storage.getLatest(Set.of("A"));
         assertEquals(1, result.size());
@@ -80,22 +89,22 @@ class PrimaryPriceStorageImplTest {
     }
 
     @Test
-    void testUpdateRecords_ignoresNullOrEmpty() throws InterruptedException {
+    void testUpdateRecords_ignoresNullOrEmpty() {
         storage.updateRecords(null);
         storage.updateRecords(List.of());
-
-        Thread.sleep(100);
 
         ImmutableMap<String, ImmutableMap<String, Object>> result = storage.getLatest(Set.of("A"));
         assertTrue(result.isEmpty());
     }
 
     @Test
-    void testGetLatest_ignoresUnknownIds() throws InterruptedException {
+    void testGetLatest_ignoresUnknownIds() {
         PriceData price = new PriceData("A", Instant.now(), ImmutableMap.of("price", 100));
         storage.updateRecords(List.of(price));
 
-        Thread.sleep(100);
+        await().atMost(2, SECONDS).until(() ->
+                !storage.getLatest(Set.of("A")).isEmpty()
+        );
 
         ImmutableMap<String, ImmutableMap<String, Object>> result = storage.getLatest(Set.of("B"));
         assertTrue(result.isEmpty());
@@ -103,11 +112,13 @@ class PrimaryPriceStorageImplTest {
 
 
     @Test
-    void testGetLatest_filtersNullIds() throws InterruptedException {
+    void testGetLatest_filtersNullIds() {
         PriceData price = new PriceData("A", Instant.now(), ImmutableMap.of("price", 100));
         storage.updateRecords(List.of(price));
 
-        Thread.sleep(100);
+        await().atMost(2, SECONDS).until(() ->
+                !storage.getLatest(Set.of("A")).isEmpty()
+        );
 
         Set<String> set = new HashSet<>() {
         };

@@ -1,6 +1,5 @@
 package com.spglobal.prices.storage;
 
-import com.google.common.collect.ImmutableList;
 import com.spglobal.prices.dto.PriceData;
 import com.spglobal.prices.exception.NoSuchBatchException;
 
@@ -29,7 +28,7 @@ public interface PriceBatchBufferStorage {
      * @param batchId the ID of the batch to add records to
      * @param chunk   the list of price records to add
      * @throws NoSuchBatchException if the batch with the given ID does not exist,
-     * has been cancelled, or has already been completed
+     *                              has been cancelled, or has already been completed
      */
     void addChunk(String batchId, List<PriceData> chunk);
 
@@ -41,9 +40,9 @@ public interface PriceBatchBufferStorage {
      * @param batchId the ID of the batch to complete
      * @return an immutable list of all price records in this batch
      * @throws NoSuchBatchException if the batch with the given ID does not exist,
-     * has been cancelled, or has already been completed
+     *                              has been cancelled, or has already been completed
      */
-    ImmutableList<PriceData> completeBatch(String batchId);
+    List<PriceData> completeBatch(String batchId);
 
     /**
      * Cancels the batch, discarding all staged data.
@@ -52,7 +51,7 @@ public interface PriceBatchBufferStorage {
      *
      * @param batchId the ID of the batch to cancel
      * @throws NoSuchBatchException if the batch with the given ID does not exist,
-     * has been cancelled, or has already been completed
+     *                              has been cancelled, or has already been completed
      */
     void cancelBatch(String batchId);
 }

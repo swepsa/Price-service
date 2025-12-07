@@ -1,6 +1,5 @@
 package com.spglobal.prices.producer;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.spglobal.prices.dto.PriceData;
 import com.spglobal.prices.exception.NoSuchBatchException;
@@ -87,7 +86,7 @@ class PriceProducerServiceImplTest {
     @Test
     void testCompleteBatch_success() {
         PriceData p = new PriceData("A", Instant.now(), ImmutableMap.of("x", 10));
-        ImmutableList<PriceData> batch = ImmutableList.of(p);
+        List<PriceData> batch = List.of(p);
 
         when(bufferStorage.completeBatch("b1")).thenReturn(batch);
 
@@ -99,7 +98,7 @@ class PriceProducerServiceImplTest {
 
     @Test
     void testCompleteBatch_withEmptyResult_doesNotUpdateStorage() {
-        when(bufferStorage.completeBatch("b1")).thenReturn(ImmutableList.of());
+        when(bufferStorage.completeBatch("b1")).thenReturn(List.of());
 
         service.completeBatch("b1");
 

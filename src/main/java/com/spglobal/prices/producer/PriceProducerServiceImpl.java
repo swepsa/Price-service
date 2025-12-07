@@ -1,6 +1,5 @@
 package com.spglobal.prices.producer;
 
-import com.google.common.collect.ImmutableList;
 import com.spglobal.prices.dto.PriceData;
 import com.spglobal.prices.exception.NoSuchBatchException;
 import com.spglobal.prices.storage.PriceBatchBufferStorage;
@@ -42,7 +41,7 @@ public class PriceProducerServiceImpl implements PriceProducerService {
     @Override
     public void completeBatch(String batchId) throws NoSuchBatchException {
         validateParameters(batchId);
-        ImmutableList<PriceData> batch = bufferStorage.completeBatch(batchId);
+        List<PriceData> batch = bufferStorage.completeBatch(batchId);
 
         if (batch == null || batch.isEmpty()) {
             return;
